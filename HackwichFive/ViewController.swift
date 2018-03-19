@@ -13,16 +13,36 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var listArray = ["house", "car", "tree", "cat", "dog"]
     
-    
     @IBOutlet weak var tableView: UITableView!
     
+    
+    var restaurantImageData = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         //set VC as delegate
         //self.tableView.datasource = self
+        
+        
+       //set delegate
+        tableView.dataSource = self
+        tableView.delegate = self
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        //Part 6
+        let path = Bundle.main.path(forResource: "Property List", ofType: "plist")
+        let dict = NSDictionary(contentsOfFile: path!)
+        
+        restaurantImageData = dict!.object(forKey:"restaurantimages") as! [String]
+        
+    
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            tableView.deselectRow(at: indexPath as IndexPath, animated: true)
+    
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -40,15 +60,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let text = listArray[indexPath.row]
         cell.textLabel?.text = text
         return cell
-    
-    
-    
     }
     
+
     
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "mySegue"
+        {
+            let s1 = segue.destination as! detailviewControllerViewController
+            let imageIndex = tableView.indexPathForSelectedRow?.row
+            s1.imagePass = restaurantImageData[imageIndex!]
+        
+        }
     
     
 }
 
 
+}
